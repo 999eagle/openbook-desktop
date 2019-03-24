@@ -32,6 +32,7 @@ fn main() {
     let engine = FlutterEngine::new(args);
     info!("Registering plugins");
     engine.add_plugin(Box::new(plugins::FlutterSecureStoragePlugin::new()));
+    engine.add_plugin(Box::new(plugins::PathProviderPlugin::new()));
     debug!("Running app");
     engine.run();
     info!("Shutting down");

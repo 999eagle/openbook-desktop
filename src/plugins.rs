@@ -1,4 +1,6 @@
-pub use self::flutter_secure_storage::FlutterSecureStoragePlugin;
+pub use self::{
+    flutter_secure_storage::FlutterSecureStoragePlugin, path_provider::PathProviderPlugin,
+};
 
 use flutter_engine::codec::standard_codec::Value;
 
@@ -56,6 +58,7 @@ macro_rules! plugin_args {
 }
 
 mod flutter_secure_storage;
+mod path_provider;
 
 enum DecodeError {
     WrongType,

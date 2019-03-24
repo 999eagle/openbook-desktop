@@ -12,6 +12,10 @@ flutter-engine = "0.2.0"
 log = "0.4"
 fern = { version = "0.5", features = ["colored"] }
 chrono = "0.4"
+dirs = "1.0"
+
+[patch.crates-io]
+flutter-engine = { git = "https://github.com/999eagle/flutter-rs.git", branch = "patch-log-missing-plugin" }
 
 [build-dependencies]
 flutter-download = "0.1.0"
