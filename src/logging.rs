@@ -40,7 +40,7 @@ pub fn setup_logging(verbosity: u8, log_to_file: bool) -> Result<(), fern::InitE
                         message
                     ))
                 })
-                .chain(fern::log_file("sol.log")?),
+                .chain(fern::log_file("openbook-desktop.log")?),
         );
     }
     logger.chain(stdout_logger).apply()?;
