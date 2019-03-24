@@ -1,6 +1,5 @@
 /target
 **/*.rs.bk
 .idea/
-icudtl.dat
 .cargo/
 libs/
