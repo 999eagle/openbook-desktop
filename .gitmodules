@@ -1,0 +1,3 @@
+[submodule "openbook-app"]
+	path = openbook-app
+	url = https://github.com/OpenbookOrg/openbook-app
