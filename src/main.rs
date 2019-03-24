@@ -1,12 +1,20 @@
 #![cfg_attr(all(windows, not(debug_assertions)), windows_subsystem = "windows")]
 
-use std::path::PathBuf;
+use std::{env, path::PathBuf};
 
 use flutter_engine::{FlutterEngine, FlutterEngineArgs};
 use log::{debug, info};
 
 mod logging;
 mod plugins;
+
+fn get_res_dir() -> PathBuf {
+    env::current_exe()
+        .expect("Cannot get application dir")
+        .parent()
+        .expect("Cannot get application dir")
+        .to_path_buf()
+}
 
 fn main() {
     if cfg!(debug_assertions) {
@@ -18,8 +26,23 @@ fn main() {
     debug!("Loading flutter engine");
     flutter_engine::init();
 
-    let assets_path = PathBuf::from("openbook-app/build/flutter_assets");
-    let icu_data_path = PathBuf::from("icudtl.dat");
+    let (assets_path, icu_data_path) = match env::var("CARGO_MANIFEST_DIR") {
+        Ok(proj_dir) => {
+            info!("Running inside cargo project");
+            let proj_dir = PathBuf::from(&proj_dir);
+            (
+                proj_dir
+                    .join("openbook-app")
+                    .join("build")
+                    .join("flutter_assets"),
+                proj_dir.join("icudtl.dat"),
+            )
+        }
+        Err(_) => {
+            let res = get_res_dir();
+            (res.join("flutter_assets"), res.join("icudtl.dat"))
+        }
+    };
 
     let args = FlutterEngineArgs {
         assets_path: assets_path.to_string_lossy().into_owned(),
