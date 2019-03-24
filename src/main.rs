@@ -1,8 +1,18 @@
 use std::{env, path::PathBuf};
 
 use flutter_engine::{FlutterEngine, FlutterEngineArgs};
+use log::{debug, info};
+
+mod logging;
 
 fn main() {
+    if cfg!(debug_assertions) {
+        logging::setup_logging(2, false).expect("Failed to setup logging");
+    } else {
+        logging::setup_logging(1, true).expect("Failed to setup logging");
+    }
+    info!("Starting openbook-desktop");
+    debug!("Loading flutter engine");
     flutter_engine::init();
 
     let assets_path = PathBuf::from("openbook-app/build/flutter_assets");
@@ -17,7 +27,11 @@ fn main() {
         ..Default::default()
     };
 
+    debug!("Creating flutter engine");
     let engine = FlutterEngine::new(args);
+    info!("Registering plugins");
+    debug!("Running app");
     engine.run();
+    info!("Shutting down");
     engine.shutdown();
 }
