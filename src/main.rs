@@ -1,9 +1,10 @@
-use std::{env, path::PathBuf};
+use std::path::PathBuf;
 
 use flutter_engine::{FlutterEngine, FlutterEngineArgs};
 use log::{debug, info};
 
 mod logging;
+mod plugins;
 
 fn main() {
     if cfg!(debug_assertions) {
@@ -30,6 +31,7 @@ fn main() {
     debug!("Creating flutter engine");
     let engine = FlutterEngine::new(args);
     info!("Registering plugins");
+    engine.add_plugin(Box::new(plugins::FlutterSecureStoragePlugin::new()));
     debug!("Running app");
     engine.run();
     info!("Shutting down");
