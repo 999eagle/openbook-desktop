@@ -1,0 +1,7 @@
+[package]
+name = "openbook-desktop"
+version = "0.1.0"
+authors = ["Sophie Tauchert <999eagle@999eagle.moe>"]
+edition = "2018"
+
+[dependencies]
