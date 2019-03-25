@@ -304,7 +304,7 @@ dependencies = [
 [[package]]
 name = "flutter-download"
 version = "0.1.0"
-source = "git+https://github.com/999eagle/flutter-rs.git?branch=patch-target-cross-compile#8a199fcb9e1344b78718abace0ee47e0127ba884"
+source = "git+https://github.com/999eagle/flutter-rs.git?branch=patch-target-cross-compile#85ec2bf2fb774b5cbcb5e8373143fc69b2ffcb03"
 dependencies = [
  "curl 0.4.20 (registry+https://github.com/rust-lang/crates.io-index)",
  "dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -662,7 +662,7 @@ dependencies = [
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.89 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.89 (registry+https://github.com/rust-lang/crates.io-index)",
- "winres 0.1.8 (git+https://github.com/gliheng/winres.git)",
+ "winres 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -1248,8 +1248,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "winres"
-version = "0.1.8"
-source = "git+https://github.com/gliheng/winres.git#3814607498f9bb2f4dceb0817cf39d5f37f2a0ac"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "toml 0.4.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -1423,7 +1423,7 @@ dependencies = [
 "checksum winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2d315eee3b34aca4797b2da6b13ed88266e6d612562a0c46390af8299fc699bc"
 "checksum winapi-i686-pc-windows-gnu 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
 "checksum winapi-x86_64-pc-windows-gnu 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
-"checksum winres 0.1.8 (git+https://github.com/gliheng/winres.git)" = "<none>"
+"checksum winres 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)" = "23d1181cabfe955a4f168def0b3e0c3e89fc80f7dd54cdf39c78822edc71fd3e"
 "checksum ws2_32-sys 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "d59cefebd0c892fa2dd6de581e937301d8552cb44489cdff035c6187cb63fa5e"
 "checksum xml-rs 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "541b12c998c5b56aa2b4e6f18f03664eef9a4fd0a246a55594efae6cc2d964b5"
 "checksum zip 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)" = "e7341988e4535c60882d5e5f0b7ad0a9a56b080ade8bdb5527cb512f7b2180e0"

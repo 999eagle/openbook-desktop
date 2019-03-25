@@ -2,7 +2,6 @@ use std::fs;
 use std::path::Path;
 
 use cargo_toml::Manifest;
-use flutter_download::Target;
 use serde_derive::Deserialize;
 
 #[derive(Deserialize)]
@@ -13,6 +12,12 @@ struct MetaData {
 #[derive(Deserialize)]
 struct FlutterMetadata {
     version: String,
+}
+
+enum Target {
+    Linux,
+    MacOS,
+    Windows,
 }
 
 fn main() {
@@ -49,14 +54,13 @@ fn main() {
     };
 
     println!("Downloading flutter engine");
-    if let Ok(rx) = flutter_download::download_to(&version, &libs_dir, target) {
+    if let Ok(rx) = flutter_download::download_to(&version, &libs_dir) {
         for (total, done) in rx.iter() {
             println!("Downloading flutter engine {} of {}", done, total);
         }
     }
 
     let libs_dir = libs_dir.join(&version);
-    write_cargo_config(&project_path, &libs_dir, target);
 
     match target {
         Target::Linux => println!(
@@ -66,38 +70,6 @@ fn main() {
         Target::MacOS => println!(
             "cargo:rustc-link-search=framework={}",
             libs_dir.to_str().expect("libs_dir invalid")
-        ),
-        Target::Windows => {
-            println!(
-                "cargo:rustc-link-search=native={}",
-                libs_dir.to_str().expect("libs_dir invalid")
-            );
-
-            //            let mut res = winres::WindowsResource::new();
-            //            res.set_icon_with_id("./assets/icon.ico", "GLFW_ICON");
-            //            res.compile().unwrap();
-        }
-    };
-}
-
-fn write_cargo_config(project_dir: &Path, libs_dir: &Path, target: Target) {
-    println!("Generating .cargo/config file");
-
-    let config_dir = project_dir.join(".cargo");
-    std::fs::create_dir(&config_dir).unwrap_or(());
-
-    let host = std::env::var("HOST").expect("Cannot determine host");
-
-    let s = match target {
-        Target::Linux => format!(
-            r#"[target.x86_64-unknown-linux-gnu]
-rustflags = ["-C", "link-args=-Wl,-rpath,{libs}"]"#,
-            libs = libs_dir.to_string_lossy()
-        ),
-        Target::MacOS => format!(
-            r#"[target.x86_64-apple-darwin]
-rustflags = ["-C", "link-args=-Wl,-rpath,{libs},-rpath,@executable_path/../Frameworks/"]"#,
-            libs = libs_dir.to_string_lossy()
         ),
         Target::Windows => {
             // windows does not use rpath, we have to copy dll to OUT_DIR
@@ -110,20 +82,17 @@ rustflags = ["-C", "link-args=-Wl,-rpath,{libs},-rpath,@executable_path/../Frame
                 .parent()
                 .unwrap()
                 .join("flutter_engine.dll");
+            fs::copy(src, tar).expect("Cannot copy flutter_engine.dll");
+            println!(
+                "cargo:rustc-link-search=native={}",
+                libs_dir.to_str().expect("libs_dir invalid")
+            );
 
-            let _ = fs::copy(src, tar);
-            if host.contains("linux") {
-                format!(
-                    r#"[target.x86_64-pc-windows-gnu]
-linker = "x86_64-w64-mingw32-gcc""#
-                )
-            } else {
-                format!(r#""#)
-            }
+            //            let mut res = winres::WindowsResource::new();
+            //            res.set_icon_with_id("./assets/icon.ico", "GLFW_ICON");
+            //            res.compile().unwrap();
         }
     };
-
-    fs::write(config_dir.join("config"), s).expect("Cannot write linker config in .cargo/config");
 }
 
 fn mingw_check_47048() {
