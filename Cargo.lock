@@ -304,7 +304,7 @@ dependencies = [
 [[package]]
 name = "flutter-download"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+source = "git+https://github.com/999eagle/flutter-rs.git?branch=patch-target-cross-compile#8a199fcb9e1344b78718abace0ee47e0127ba884"
 dependencies = [
  "curl 0.4.20 (registry+https://github.com/rust-lang/crates.io-index)",
  "dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -314,7 +314,7 @@ dependencies = [
 [[package]]
 name = "flutter-engine"
 version = "0.2.0"
-source = "git+https://github.com/999eagle/flutter-rs.git?branch=patch-log-missing-plugin#17b87389f5b30e479ec62b1d6cdd3868dfef5c67"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "futures 0.1.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "gl 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -653,11 +653,12 @@ name = "openbook-desktop"
 version = "0.1.0"
 dependencies = [
  "cargo_toml 0.6.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cc 1.0.31 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "fern 0.5.7 (registry+https://github.com/rust-lang/crates.io-index)",
- "flutter-download 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "flutter-engine 0.2.0 (git+https://github.com/999eagle/flutter-rs.git?branch=patch-log-missing-plugin)",
+ "flutter-download 0.1.0 (git+https://github.com/999eagle/flutter-rs.git?branch=patch-target-cross-compile)",
+ "flutter-engine 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.89 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_derive 1.0.89 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1315,8 +1316,8 @@ dependencies = [
 "checksum failure_derive 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)" = "ea1063915fd7ef4309e222a5a07cf9c319fb9c7836b1f89b85458672dbb127e1"
 "checksum fern 0.5.7 (registry+https://github.com/rust-lang/crates.io-index)" = "b48af88aaf938b11baef948a5599e66e709cf92854aa2b87c71f1bcf20f80a01"
 "checksum flate2 1.0.7 (registry+https://github.com/rust-lang/crates.io-index)" = "f87e68aa82b2de08a6e037f1385455759df6e445a8df5e005b4297191dbf18aa"
-"checksum flutter-download 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "98a39a5a3abd7d8a9015b92f2954f8eb3ce54af1124f7a5231a66b9a16a92e86"
-"checksum flutter-engine 0.2.0 (git+https://github.com/999eagle/flutter-rs.git?branch=patch-log-missing-plugin)" = "<none>"
+"checksum flutter-download 0.1.0 (git+https://github.com/999eagle/flutter-rs.git?branch=patch-target-cross-compile)" = "<none>"
+"checksum flutter-engine 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ad7dda145727f77825ac3c866b1aea1ce909a161cb8ac20242b7f40688126303"
 "checksum fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)" = "2fad85553e09a6f881f739c29f0b00b0f01357c743266d478b68951ce23285f3"
 "checksum fuchsia-cprng 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "a06f77d526c1a601b7c4cdd98f54b5eaabffc14d5f2f0296febdc7f357c6d3ba"
 "checksum fuchsia-zircon 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)" = "2e9763c69ebaae630ba35f74888db465e49e259ba1bc0eda7d06f4a067615d82"

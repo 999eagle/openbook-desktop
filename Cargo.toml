@@ -7,6 +7,8 @@ edition = "2018"
 [package.metadata.flutter]
 version = "3757390fa4b00d2d261bfdf5182d2e87c9113ff9"
 
+[package.metadata.winres]
+
 [dependencies]
 flutter-engine = "0.2.0"
 log = "0.4"
@@ -15,13 +17,12 @@ chrono = "0.4"
 dirs = "1.0"
 
 [patch.crates-io]
-flutter-engine = { git = "https://github.com/999eagle/flutter-rs.git", branch = "patch-log-missing-plugin" }
+flutter-download = { git = "https://github.com/999eagle/flutter-rs.git", branch = "patch-target-cross-compile" }
 
 [build-dependencies]
 flutter-download = "0.1.0"
 cargo_toml = "0.6.4"
 serde_derive = "1.0.89"
 serde = "1.0.89"
-
-[target.'cfg(target_os="windows")'.build-dependencies]
 winres = { git = "https://github.com/gliheng/winres.git" }
+cc = "1.0"
