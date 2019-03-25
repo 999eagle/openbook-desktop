@@ -1,6 +1,8 @@
 use std::collections::HashMap;
+use std::fs::File;
 use std::sync::Arc;
 
+use self::crypto::Crypto;
 use super::DecodeError;
 
 use flutter_engine::{
@@ -10,7 +12,10 @@ use flutter_engine::{
 };
 use log::{debug, info, trace};
 
+mod crypto;
+
 const CHANNEL_NAME: &str = "plugins.it_nomads.com/flutter_secure_storage";
+const STORAGE_FILE_NAME: &str = "secure_storage.json";
 
 plugin_args! {
     ReadArgs,
@@ -29,21 +34,57 @@ plugin_args! {
 pub struct FlutterSecureStoragePlugin {
     channel: StandardMethodChannel,
     storage: HashMap<String, String>,
+    crypto: Crypto,
 }
 
 impl FlutterSecureStoragePlugin {
     pub fn new() -> Self {
+        let mut storage = match dirs::data_dir() {
+            Some(dir) => match File::open(dir.join("openbook").join(STORAGE_FILE_NAME)) {
+                Ok(file) => match serde_json::from_reader(file) {
+                    Ok(result) => result,
+                    _ => HashMap::new(),
+                },
+                _ => HashMap::new(),
+            },
+            None => HashMap::new(),
+        };
+
+        let crypto = Crypto::from_storage(&mut storage).expect("Failed to create crypto");
+
+        Self::save(&storage);
+
         Self {
             channel: StandardMethodChannel::new(CHANNEL_NAME),
-            storage: HashMap::new(),
+            storage,
+            crypto,
         }
+    }
+
+    fn save(storage: &HashMap<String, String>) {
+        match serde_json::to_string(storage) {
+            Ok(data) => match dirs::data_dir() {
+                Some(dir) => {
+                    std::fs::write(dir.join("openbook").join(STORAGE_FILE_NAME), data).ok()
+                }
+                None => None,
+            },
+            _ => None,
+        };
     }
 
     fn read(&self, args: &ReadArgs) -> MethodCallResult<Value> {
         trace!("Read key {}", args.key);
 
         match self.storage.get(args.key) {
-            Some(v) => MethodCallResult::Ok(Value::String(v.clone())),
+            Some(v) => match self.crypto.decrypt(v) {
+                Ok(data) => MethodCallResult::Ok(Value::String(data)),
+                _ => MethodCallResult::Err {
+                    details: Value::Null,
+                    code: String::from(""),
+                    message: String::from(""),
+                },
+            },
             None => MethodCallResult::Ok(Value::Null),
         }
     }
@@ -51,10 +92,20 @@ impl FlutterSecureStoragePlugin {
     fn write(&mut self, args: &WriteArgs) -> MethodCallResult<Value> {
         trace!("Write key {}. New value: {}", args.key, args.value);
 
-        self.storage
-            .insert(String::from(args.key), String::from(args.value));
+        match self.crypto.encrypt(args.value) {
+            Ok(data) => {
+                self.storage.insert(String::from(args.key), data);
 
-        MethodCallResult::Ok(Value::Null)
+                Self::save(&self.storage);
+
+                MethodCallResult::Ok(Value::Null)
+            }
+            _ => MethodCallResult::Err {
+                details: Value::Null,
+                code: String::from(""),
+                message: String::from(""),
+            },
+        }
     }
 
     fn delete(&mut self, args: &DeleteArgs) -> MethodCallResult<Value> {
@@ -67,7 +118,9 @@ impl FlutterSecureStoragePlugin {
         trace!("Read all");
         let mut map = HashMap::<Value, Value>::new();
         for (key, value) in self.storage.iter() {
-            map.insert(Value::String(key.clone()), Value::String(value.clone()));
+            if let Ok(data) = self.crypto.decrypt(value) {
+                map.insert(Value::String(key.clone()), Value::String(data));
+            }
         }
         MethodCallResult::Ok(Value::Map(map))
     }
@@ -77,6 +130,13 @@ impl FlutterSecureStoragePlugin {
         self.storage.clear();
         MethodCallResult::Ok(Value::Null)
     }
+
+    //    fn decode_value(&self, key: &str) -> Option<String> {
+    //        if let Some(value) = self.storage.get(key) {
+    //            if let Ok(bytes) = base64::decode(value) {}
+    //        }
+    //        None
+    //    }
 }
 
 impl Plugin for FlutterSecureStoragePlugin {

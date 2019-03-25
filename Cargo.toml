@@ -13,9 +13,16 @@ log = "0.4"
 fern = { version = "0.5", features = ["colored"] }
 chrono = "0.4"
 dirs = "1.0"
+base64 = "0.10"
+aes = "0.3"
+block-modes = "0.3"
+rand = "0.5"
+serde = "1.0"
+serde_json = "1.0"
 
 [patch.crates-io]
 flutter-download = { git = "https://github.com/999eagle/flutter-rs.git", branch = "patch-target-cross-compile" }
+flutter-engine = { git = "https://github.com/999eagle/flutter-rs.git" }
 
 [build-dependencies]
 flutter-download = "0.1.0"
