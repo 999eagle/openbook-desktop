@@ -2,6 +2,8 @@
 
 This is a still very WIP desktop app for openbook. As the app itself is written using flutter, `openbook-desktop` uses the flutter engine library to run the app on desktop.
 
+The [GitHub repo](https://github.com/999eagle/openbook-desktop) is just a mirror of the [GitLab repo](https://gitlab.com/999eagle/openbook-desktop) and is only used for releases. If you'd like to contribute or open an issue, please do that on GitLab. Thanks :)
+
 ## Known issues
 
 These issues are specific to the desktop version and not necessarily to the app itself. If you find more issues specific to this desktop version, please report them on [GitLab](https://gitlab.com/999eagle/openbook-desktop).
