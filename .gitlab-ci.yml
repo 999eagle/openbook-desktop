@@ -24,9 +24,7 @@ flutter-app:
   script:
     - cd openbook-app
     - echo "{\"API_URL\":\"https://api.openbook.social/\",\"MAGIC_HEADER_NAME\":\"X-JESUS-TAKE-THE-WHEEL\",\"MAGIC_HEADER_VALUE\":\"jesusCantReallyDriveTho\"}" > .env.json
-    - cd lib
-    - patch -uNp1 -i ../../main.dart.patch
-    - cd ..
+    - patch -uNp1 -i ../main.dart.patch
     - flutter build bundle
     - cd ..
     - if [ -d build ]; then rm -rf build; fi
