@@ -1,0 +1,95 @@
+image: "rust"
+
+stages:
+  - lint
+  - build
+  - deploy
+
+# Lint jobs
+
+rustfmt:
+  stage: lint
+  script:
+    - rustup component add rustfmt
+    - cargo fmt -- --check
+
+# Build jobs
+
+## Flutter app
+flutter-app:
+  image: cirrusci/flutter
+  stage: build
+  variables:
+    GIT_SUBMODULE_STRATEGY: "recursive"
+  script:
+    - cd openbook-app
+    - echo "{\"API_URL\":\"https://api.openbook.social/\",\"MAGIC_HEADER_NAME\":\"X-JESUS-TAKE-THE-WHEEL\",\"MAGIC_HEADER_VALUE\":\"jesusCantReallyDriveTho\"}" > .env.json
+    - cd lib
+    - patch -uNp1 -i ../../main.dart.patch
+    - cd ..
+    - flutter build bundle
+    - cd ..
+    - if [ -d build ]; then rm -rf build; fi
+    - mkdir -p build
+    - cp -r openbook-app/build/flutter_assets build/
+    - cp icudtl.dat build/
+  artifacts:
+    paths:
+      - build
+
+## Rust wrapper
+.rust-build-template:
+  stage: build
+  script:
+    - apt-get update
+    - apt-get -y install cmake libxrandr-dev libxinerama-dev libxcursor-dev libgl1-mesa-dev libxxf86vm-dev libxi-dev
+    - if [ $TARGET = "x86_64-pc-windows-gnu" ]; then apt-get -y install mingw-w64 && ln -s windows.h /usr/x86_64-w64-mingw32/include/Windows.h && ln -s shlobj.h /usr/x86_64-w64-mingw32/include/Shlobj.h; fi
+    - rustup target add $TARGET
+    - cargo build --release --target=$TARGET
+  artifacts:
+    paths:
+      - build
+
+x86_64-unknown-linux-gnu:
+  extends: .rust-build-template
+  variables:
+    TARGET: "x86_64-unknown-linux-gnu"
+    FLUTTER_VERSION: "3757390fa4b00d2d261bfdf5182d2e87c9113ff9"
+  before_script:
+    - mkdir -p .cargo
+    - echo -e "[target.x86_64-unknown-linux-gnu]\\nrustflags = [\"-C\",\"link-args=-Wl,-rpath,$(pwd)/libs/${FLUTTER_VERSION}\"]" > .cargo/config
+  after_script:
+    - mkdir -p build/x86_64-linux
+    - cp target/$TARGET/release/openbook-desktop build/x86_64-linux/
+
+x86_64-pc-windows-gnu:
+  extends: .rust-build-template
+  variables:
+    TARGET: "x86_64-pc-windows-gnu"
+  before_script:
+    - mkdir -p .cargo
+    - echo -e "[target.x86_64-pc-windows-gnu]\\nlinker = \"x86_64-w64-mingw32-gcc\"" > .cargo/config
+  after_script:
+    - mkdir -p build/x86_64-windows
+    - cp target/$TARGET/release/openbook-desktop.exe build/x86_64-windows/
+    - cp target/$TARGET/release/flutter_engine.dll build/x86_64-windows/
+
+# Deploy jobs
+
+deploy:
+  stage: deploy
+  dependencies:
+    - x86_64-unknown-linux-gnu
+    - x86_64-pc-windows-gnu
+    - flutter-app
+  script:
+    - cd build
+    - cp -r flutter_assets x86_64-linux/
+    - cp -r flutter_assets x86_64-windows/
+    - rm -rf flutter_assets
+    - cp icudtl.dat x86_64-linux/
+    - cp icudtl.dat x86_64-windows/
+    - rm icudtl.dat
+  artifacts:
+    paths:
+      - build

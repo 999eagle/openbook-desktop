@@ -1,0 +1,18 @@
+--- a/main.dart
++++ b/main.dart
+@@ -19,6 +19,8 @@
+ import 'package:Openbook/services/universal_links/universal_links.dart';
+ import 'package:Openbook/widgets/toast.dart';
+ import 'package:flutter/material.dart';
++import 'package:flutter/foundation.dart'
++    show debugDefaultTargetPlatformOverride;
+ import 'package:flutter\_localizations/flutter\_localizations.dart';
+
+ class MyApp extends StatelessWidget {
+@@ -132,5 +134,6 @@
+ }
+
+ void main() {
++  debugDefaultTargetPlatformOverride = TargetPlatform.android;
+   runApp(new MyApp());
+ }
