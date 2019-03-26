@@ -12,8 +12,8 @@ These issues are specific to the desktop version and not necessarily to the app 
 
 ## Dependencies
 
-* Flutter SDK
-* Rust
+* [Flutter SDK] (https://flutter.dev/docs/development/tools/sdk/releases)
+* [Rust] (https://www.rust-lang.org/tools/install)
 
 ## Running
 
