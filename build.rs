@@ -63,10 +63,22 @@ fn main() {
     let libs_dir = libs_dir.join(&version);
 
     match target {
-        Target::Linux => println!(
-            "cargo:rustc-link-search=native={}",
-            libs_dir.to_str().expect("libs_dir invalid")
-        ),
+        Target::Linux => {
+            let src = libs_dir.join("libflutter_engine.so");
+            let tar = Path::new(&std::env::var("OUT_DIR").unwrap())
+                .parent()
+                .unwrap()
+                .parent()
+                .unwrap()
+                .parent()
+                .unwrap()
+                .join("libflutter_engine.so");
+            fs::copy(src, tar).expect("Cannot copy libflutter_engine.so");
+            println!(
+                "cargo:rustc-link-search=native={}",
+                libs_dir.to_str().expect("libs_dir invalid")
+            );
+        }
         Target::MacOS => println!(
             "cargo:rustc-link-search=framework={}",
             libs_dir.to_str().expect("libs_dir invalid")

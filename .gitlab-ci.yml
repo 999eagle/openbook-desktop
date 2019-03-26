@@ -57,10 +57,13 @@ x86_64-unknown-linux-gnu:
     FLUTTER_VERSION: "3757390fa4b00d2d261bfdf5182d2e87c9113ff9"
   before_script:
     - mkdir -p .cargo
-    - echo -e "[target.x86_64-unknown-linux-gnu]\\nrustflags = [\"-C\",\"link-args=-Wl,-rpath,$(pwd)/libs/${FLUTTER_VERSION}\"]" > .cargo/config
+    - echo -e "[target.x86_64-unknown-linux-gnu]\\nrustflags = [\"-C\",\"link-args=-Wl,-rpath,.,-rpath-link,$(pwd)/libs/${FLUTTER_VERSION}\"]" > .cargo/config
   after_script:
     - mkdir -p build/x86_64-linux
     - cp target/$TARGET/release/openbook-desktop build/x86_64-linux/
+    - cp target/$TARGET/release/libflutter_engine.so build/x86_64-linux/
+    - strip -s build/x86_64-linux/libflutter_engine.so
+    - cp openbook-desktop.sh build/x86_64-linux/
 
 x86_64-pc-windows-gnu:
   extends: .rust-build-template
